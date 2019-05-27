@@ -1,9 +1,11 @@
 const mongoose = require("mongoose");
 
-mongoose.connect("mongodb://localhost/mongo-exercises");
+mongoose.connect("mongodb://localhost/mongo-exercises", {
+  useNewUrlParser: true
+});
 
 const courseSchema = new mongoose.Schema({
-  name: String,
+  name: { type: String, required: true },
   author: String,
   tags: [String],
   date: Date,
@@ -19,9 +21,28 @@ async function getCourses() {
     .select({ name: 1, author: 1 });
 }
 
+async function createCourse() {
+  const course = new Course({
+    //name: "Angular Course",
+    author: "Mosh",
+    tags: ["angular", "frontend"],
+    isPublished: true,
+    price: 15
+  });
+
+  try {
+    const result = await course.save();
+    console.log(result);
+  } catch (ex) {
+    console.log(ex.message);
+  }
+}
+
 async function run() {
   const courses = await getCourses();
   console.log(courses);
 }
 
-run();
+createCourse();
+
+//run();
